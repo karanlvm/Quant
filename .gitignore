@@ -15,12 +15,13 @@ build/
 .coverage
 htmlcov/
 
-# Data
+# Data (but keep docs/ for GitHub Pages)
 data/
 *.csv
 *.json
 *.pkl
 *.h5
+!docs/*.json
 
 # Models
 models/

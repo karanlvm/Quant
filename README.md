@@ -8,8 +8,9 @@ An AI-powered portfolio optimization system using Reinforcement Learning that co
 - 📊 **Comprehensive Data Collection**: Analyzes 150+ stocks across 11 major sectors
 - 📰 **News Sentiment Analysis**: Integrates market news and sentiment to inform decisions
 - 🔄 **Continuous Learning**: GitHub Actions workflow updates model every 6 hours
-- 🌐 **Web Interface**: Simple, beautiful web dashboard showing real-time portfolio recommendations
+- 🌐 **Bloomberg Terminal Interface**: Professional terminal-style web dashboard
 - 📈 **Diverse Portfolio**: Optimizes across tech, finance, healthcare, energy, materials, REITs, utilities, and more
+- 🚀 **GitHub Pages Deployment**: Live website automatically deployed
 
 ## 🚀 Quick Start
 
@@ -43,12 +44,45 @@ python src/data_collector.py
 python src/trainer.py
 ```
 
-6. **Start web server:**
+6. **Start web server (local):**
 ```bash
 python web/app.py
 ```
 
-Visit `http://localhost:8000` to see the dashboard!
+Visit `http://localhost:8000` to see the Bloomberg Terminal!
+
+## 🌐 GitHub Pages Deployment
+
+### Setup Steps:
+
+1. **Enable GitHub Pages:**
+   - Go to repository → **Settings** → **Pages**
+   - Under **Source**, select **GitHub Actions**
+   - Save
+
+2. **Add News API Key (Optional):**
+   - Go to **Settings** → **Secrets and variables** → **Actions**
+   - Add secret: `NEWS_API_KEY` with your API key
+
+3. **Push to GitHub:**
+   ```bash
+   git add .
+   git commit -m "Deploy to GitHub Pages"
+   git push origin main
+   ```
+
+4. **Your site will be live at:**
+   ```
+   https://yourusername.github.io/Quant/
+   ```
+
+The GitHub Actions workflow will:
+- ✅ Deploy automatically on every push
+- ✅ Update data hourly
+- ✅ Generate static JSON files
+- ✅ Deploy to GitHub Pages
+
+See [GITHUB_PAGES_SETUP.md](GITHUB_PAGES_SETUP.md) for detailed instructions.
 
 ## 📁 Project Structure
 
@@ -56,7 +90,13 @@ Visit `http://localhost:8000` to see the dashboard!
 Quant/
 ├── .github/
 │   └── workflows/
-│       └── continuous_learning.yml  # Auto-training workflow
+│       ├── continuous_learning.yml  # Auto-training workflow
+│       └── deploy_pages.yml         # GitHub Pages deployment
+├── docs/                             # GitHub Pages files
+│   ├── index.html                   # Bloomberg Terminal UI
+│   ├── portfolio.json               # Generated portfolio data
+│   ├── market-data.json             # Generated market data
+│   └── ...                          # Other generated files
 ├── data/                             # Market data storage
 │   ├── prices/                       # Price data (CSV)
 │   └── news/                         # News and sentiment data
@@ -70,31 +110,31 @@ Quant/
 │   ├── trainer.py                   # Training pipeline
 │   └── generate_portfolio.py        # Portfolio generation
 ├── web/
-│   ├── app.py                       # FastAPI web server
-│   ├── templates/
-│   │   └── index.html              # Dashboard UI
-│   └── static/                      # CSS/JS files
+│   ├── app.py                       # FastAPI web server (local)
+│   └── templates/                   # HTML templates
 └── requirements.txt
 ```
 
-## 🔄 Continuous Learning
+## 🎨 Bloomberg Terminal Interface
 
-The system includes a GitHub Actions workflow that:
+The web dashboard features a **Bloomberg Terminal-style interface** with:
+- **Real-time Portfolio Allocation**: Live portfolio weights and allocations
+- **Performance Metrics**: Sharpe ratio, returns, drawdown, volatility, alpha, beta
+- **Market Data**: Live prices, changes, volumes for all portfolio assets
+- **News Sentiment**: Real-time sentiment scores with visual indicators
+- **Performance Chart**: Equity curve visualization
+- **System Status**: Model training status, data availability
 
-1. **Runs every 6 hours** (configurable)
-2. Collects latest market data
-3. Fetches and analyzes news sentiment
-4. Trains/updates the RL model
-5. Generates new portfolio recommendations
-6. Commits results to repository
+**Features:**
+- Dark Bloomberg-style theme
+- Data-dense layout
+- Real-time updates
+- Professional terminal aesthetic
+- Multiple synchronized panels
 
-### Setup GitHub Actions
-
-1. Add `NEWS_API_KEY` to GitHub Secrets:
-   - Go to Repository → Settings → Secrets → Actions
-   - Add secret: `NEWS_API_KEY` with your API key
-
-2. Push to GitHub - workflow will run automatically!
+**Access:**
+- Local: `http://localhost:8000`
+- GitHub Pages: `https://yourusername.github.io/Quant/`
 
 ## 📊 Sectors Analyzed
 
@@ -114,6 +154,21 @@ The system analyzes stocks across **11 major sectors**:
 - **ETFs** (13 ETFs): SPY, QQQ, VTI, etc.
 
 **Total: 150+ assets** for maximum diversification!
+
+## 🔄 Continuous Learning
+
+The system includes GitHub Actions workflows that:
+
+1. **Train Model** (every 6 hours):
+   - Collects latest market data
+   - Fetches and analyzes news sentiment
+   - Trains/updates the RL model
+   - Generates new portfolio recommendations
+
+2. **Deploy to Pages** (every hour):
+   - Generates static JSON files
+   - Updates GitHub Pages
+   - Keeps website data fresh
 
 ## 🧠 How It Works
 
@@ -144,15 +199,6 @@ The system analyzes stocks across **11 major sectors**:
 - Adapts to changing market conditions
 - Improves portfolio allocations over time
 
-## 🌐 Web Interface
-
-The web dashboard shows:
-- **Optimal Portfolio**: Real-time allocation recommendations
-- **News Sentiment**: Sentiment scores for tracked stocks
-- **System Status**: Model training status, data availability
-
-Access at: `http://localhost:8000`
-
 ## 📰 News Integration
 
 The system uses **NewsAPI.org** (free tier available):
@@ -168,45 +214,6 @@ The system uses **NewsAPI.org** (free tier available):
 3. Add to environment: `export NEWS_API_KEY="your_key"`
 4. Or add to GitHub Secrets for CI/CD
 
-## 🔧 Configuration
-
-### Training Parameters
-
-Edit `src/trainer.py`:
-```python
-trainer.run_full_training(
-    total_timesteps=100000,  # Training steps
-    learning_rate=3e-4,      # Learning rate
-    update=True              # Continue training existing model
-)
-```
-
-### GitHub Actions Schedule
-
-Edit `.github/workflows/continuous_learning.yml`:
-```yaml
-schedule:
-  - cron: '0 */6 * * *'  # Every 6 hours (change as needed)
-```
-
-## 📈 Performance
-
-The RL agent learns to:
-- Optimize portfolio allocations
-- Balance risk and return
-- Adapt to market volatility
-- Incorporate news sentiment
-- Diversify across sectors
-
-## 🤝 Contributing
-
-Contributions welcome! Areas for improvement:
-- Additional data sources
-- More sophisticated sentiment analysis
-- Different RL algorithms
-- Enhanced web interface
-- Backtesting framework
-
 ## 📝 License
 
 MIT License - See LICENSE file
@@ -221,3 +228,5 @@ MIT License - See LICENSE file
 ---
 
 **Note**: This system is for educational/research purposes. No actual trades are executed. Always do your own research before making investment decisions.
+
+**Live Demo**: [View on GitHub Pages](https://yourusername.github.io/Quant/) (after deployment)
